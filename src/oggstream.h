@@ -40,7 +40,7 @@
 
 #include <ogg/ogg.h>
 
-#if KOBOLD_PLATFORM != KOBOLD_PLATFORM__IOS && \
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID
    #include <vorbis/codec.h>
    #include <vorbis/vorbisenc.h>

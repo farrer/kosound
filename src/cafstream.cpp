@@ -27,7 +27,7 @@
 #if KOBOLD_PLATFORM == KOBOLD_PLATFORM_MACOS || \
     KOBOLD_PLATFORM == KOBOLD_PLATFORM_IOS
 
-#include "macutils.h"
+#include <kobold/macutils.h>
 
 using namespace Kosound;
 
@@ -68,7 +68,7 @@ bool CafStream::_open(Kobold::String fName, ALenum* f, ALuint* sr)
    CFStringEncoding encoding = kCFStringEncodingMacRoman; // =  0;
 	CFAllocatorRef alloc_default = kCFAllocatorDefault;  // = NULL;
    CFStringRef pathC = CFStringCreateWithCString(alloc_default, 
-           ((macBundlePath()+Kobold::String("/")+fName).c_str()), encoding);
+      ((Kobold::macBundlePath()+Kobold::String("/")+fName).c_str()), encoding);
    
    /* Now create the URL Ref (ouch, that's pretty ugly!) */
    CFURLRef fileURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
@@ -81,8 +81,9 @@ bool CafStream::_open(Kobold::String fName, ALenum* f, ALuint* sr)
       CFRelease(pathC);
       CFRelease(fileURL);
       
-      Log::add(Log::LOG_LEVEL_ERROR, "CafStream::open() Couldn't open: '%s'",
-                          (macBundlePath() + fName).c_str());
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+                       "CafStream::open() Couldn't open: '%s'",
+                       (Kobold::macBundlePath() + fName).c_str());
       return false;
    }
    
@@ -97,7 +98,7 @@ bool CafStream::_open(Kobold::String fName, ALenum* f, ALuint* sr)
    if( (inputFormat.mChannelsPerFrame > 2) || 
        (inputFormat.mChannelsPerFrame <= 0) )
    {
-      Log::add(Log::LOG_LEVEL_ERROR, 
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
                "CafStream::open(): Too many channels for '%s'",
                fileName.c_str());
       return false;
@@ -158,7 +159,7 @@ bool CafStream::_rewind()
    /* Rewind the file */
    if(ExtAudioFileSeek(extAudioFile, initialFrameOffset))
    {
-      Log::add(Log::LOG_LEVEL_ERROR, "CAF Rewind Error!");
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, "CAF Rewind Error!");
       return false;
    }
    return true;
@@ -188,7 +189,7 @@ bool CafStream::_getBuffer(unsigned long index, unsigned long readBytes,
    err = ExtAudioFileRead(extAudioFile, &maxFrames, &dataBuffer);
    if(err != noErr)
    {
-      Log::add(Log::LOG_LEVEL_ERROR, "CAF buffer error: %s",
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, "CAF buffer error: %s",
                errorString(err).c_str());
       return false;
    }

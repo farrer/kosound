@@ -114,20 +114,20 @@ SoundStream* SndFx::createStream(Kobold::String fileName)
    if(fileName.find(Kobold::String(".ogg")) !=  Kobold::String::npos )
    {
       /* Create Ogg */
-      return(new OggStream());
+      return new OggStream();
    }
    else
    {
 #if KOBOLD_PLATFORM == KOBOLD_PLATFORM_MACOS || \
     KOBOLD_PLATFORM == KOBOLD_PLATFORM_IOS
       /* Create the CAF */
-      return(new CafStream());
+      return new CafStream();
 #endif
    }
 
    Kobold::Log::add(Kobold::String("Unsupported file format for: ") +
          fileName);
-   return(NULL);
+   return NULL;
 }
 
 /*************************************************************************
