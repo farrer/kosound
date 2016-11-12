@@ -16,7 +16,7 @@ before_install:
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then tar -xzf cmake.tar.gz -C $HOME; fi
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export PATH=$HOME/cmake-3.3.2-Linux-x86_64/bin:$PATH; fi
    - sudo apt-get -qq update
-   - sudo apt-get install -y libfreetype6-dev
+   - sudo apt-get install -y libfreetype6-dev libopenal-dev
 
    # workaround for Clang
    - $CC --version
