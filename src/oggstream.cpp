@@ -158,8 +158,8 @@ bool OggStream::_open(Kobold::String path, ALenum* f, ALuint* sr)
    if(!(oggFile = fopen(path.c_str(), "rb")))
    {
       //cerr << "Could not open Ogg file: " <<  dir.getRealFile(path) << endl;
-      Kobold::Log::add(Log::LOG_LEVEL_ERROR, "Could not open Ogg file: %s",
-          path.c_str());
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+	  "Could not open Ogg file: %s", path.c_str());
       return false;
    }
 
