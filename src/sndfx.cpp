@@ -70,8 +70,6 @@ SndFx::SndFx(ALfloat centerX, ALfloat centerY, ALfloat centerZ, int lp,
    {
       deleteStream();
    }
-   next = NULL;
-   previous = NULL;
 }
 
 /*************************************************************************
@@ -102,8 +100,6 @@ SndFx::SndFx(int lp, Kobold::String fileName)
    {
       deleteStream();
    }
-   next = NULL;
-   previous = NULL;
 }
 
 /*************************************************************************
