@@ -36,7 +36,7 @@ SndFx::SndFx()
  *                             Constructor                               *
  *************************************************************************/
 SndFx::SndFx(ALfloat centerX, ALfloat centerY, ALfloat centerZ, int lp,
-             Kobold::String fileName)
+      const Kobold::String& fileName)
 {
    removable = true;
    /* Create the Ogg Stream */ 
@@ -68,14 +68,14 @@ SndFx::SndFx(ALfloat centerX, ALfloat centerY, ALfloat centerZ, int lp,
    }
    else
    {
-      deleteStream();
+      delete sndStream;
    }
 }
 
 /*************************************************************************
  *                             Constructor                               *
  *************************************************************************/
-SndFx::SndFx(int lp, Kobold::String fileName)
+SndFx::SndFx(int lp, const Kobold::String& fileName)
 {
    removable = true;
    /* Create the Ogg Stream */ 
@@ -98,14 +98,14 @@ SndFx::SndFx(int lp, Kobold::String fileName)
    }
    else
    {
-      deleteStream();
+      delete sndStream;
    }
 }
 
 /*************************************************************************
  *                             createStream                              *
  *************************************************************************/
-SoundStream* SndFx::createStream(Kobold::String fileName)
+SoundStream* SndFx::createStream(const Kobold::String& fileName)
 {
    if(fileName.find(Kobold::String(".ogg")) !=  Kobold::String::npos )
    {
@@ -127,40 +127,6 @@ SoundStream* SndFx::createStream(Kobold::String fileName)
 }
 
 /*************************************************************************
- *                            deleteStream                               *
- *************************************************************************/
-void SndFx::deleteStream()
-{
-   if(sndStream)
-   {
-      switch(sndStream->getType())
-      {
-#if KOBOLD_PLATFORM == KOBOLD_PLATFORM_MACOS || \
-    KOBOLD_PLATFORM == KOBOLD_PLATFORM_IOS
-         case SoundStream::TYPE_CAF:
-         {
-            CafStream* cs = (CafStream*)sndStream;
-            delete(cs);
-         }
-         break;
-#endif
-         case SoundStream::TYPE_OGG:
-         {
-            OggStream* os = (OggStream*)sndStream;
-            delete(os);
-         }
-         break;
-         default:
-         {
-            delete(sndStream);
-         }
-         break;
-      }
-      sndStream = NULL;
-   }
-}
-
-/*************************************************************************
  *                              Destructor                               *
  *************************************************************************/
 SndFx::~SndFx()
@@ -168,7 +134,7 @@ SndFx::~SndFx()
    if(sndStream)
    {
       sndStream->release();
-      deleteStream();
+      delete sndStream;
    }
 }
 

@@ -62,11 +62,11 @@ class OggStream : public SoundStream
       /*! Constructor */
       OggStream();
       /*! Destructor */
-      ~OggStream();
+      virtual ~OggStream();
       
    protected:
       /*! Open the Ogg file to use */
-      bool _open(Kobold::String fName, ALenum* f, ALuint* sr);
+      bool _open(const Kobold::String& fName, ALenum* f, ALuint* sr);
 
       /*! Release specific Ogg structures */
       void _release();

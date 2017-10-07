@@ -74,7 +74,7 @@ class Sound
 
       /*! Load and Start to Play OGG music file.
        * \param fileName -> name of the ogg file with the desired music. */
-      static bool loadMusic(Kobold::String fileName);
+      static bool loadMusic(const Kobold::String& fileName);
    
       /*! Add Sound effect to the list
        *  \param x -> X position
@@ -84,14 +84,14 @@ class Sound
        *  \param fileName -> name of the ogg file to open
        *  \return pointer to the added Sound */
       static SndFx* addSoundEffect(ALfloat x, ALfloat y, ALfloat z, int loop,
-            Kobold::String fileName);
+            const Kobold::String& fileName);
       
       /*! Add Sound effect without position to the list
        *  \param loop -> if Sound will loop at end or not (see sndFx and
        *                                                   ogg_stream)
        *  \param fileName -> name of the ogg file to open
        *  \return pointer to the added Sound */
-      static SndFx* addSoundEffect(int loop, Kobold::String fileName);
+      static SndFx* addSoundEffect(int loop, const Kobold::String& fileName);
 
       /*! Remove Sound effect from list
        *  \param snd -> pointer to Sound effect to remove */

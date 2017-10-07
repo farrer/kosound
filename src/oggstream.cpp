@@ -134,7 +134,7 @@ OggStream::~OggStream()
 /*************************************************************************
  *                                 open                                  *
  *************************************************************************/
-bool OggStream::_open(Kobold::String path, ALenum* f, ALuint* sr)
+bool OggStream::_open(const Kobold::String& path, ALenum* f, ALuint* sr)
 {
    int result;
 

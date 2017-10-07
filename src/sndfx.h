@@ -58,7 +58,7 @@ class SndFx: public Kobold::ListElement
        * \param lp -> loop interval (<0 won't loop, =0 loop 
        *              just after the end, >0 wait lp seconds to loop)
        * \param fileName -> name of the Ogg File to Open */
-      SndFx(int lp, Kobold::String fileName);
+      SndFx(int lp, const Kobold::String& fileName);
       
       /*! Constructor of the Class.
        * \param centerX -> X position of the source
@@ -67,7 +67,7 @@ class SndFx: public Kobold::ListElement
        * \param lp -> loop interval (see setLoop)
        * \param fileName -> name of the Ogg File to Open */
       SndFx(ALfloat centerX, ALfloat centerY, ALfloat centerZ, int lp,
-            Kobold::String fileName);
+            const Kobold::String& fileName);
       /*! Destructor */
       ~SndFx();
 
@@ -126,14 +126,11 @@ class SndFx: public Kobold::ListElement
 
       /*! Get if the sound effect is removable when finished 
        * (repeats included). */
-      bool getRemoval(){return(removable);};
+      const bool getRemoval() const { return removable; };
 
    private:
       /*! Create specific sound stream (related with file type) */
-      SoundStream* createStream(Kobold::String fileName);
-
-      /*! Delete the used sound stream */
-      void deleteStream();
+      SoundStream* createStream(const Kobold::String& fileName);
 
       SoundStream* sndStream; /**< Sound stream used */
       bool removable; /**< if is automatically removable or not */

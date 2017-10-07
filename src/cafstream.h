@@ -45,11 +45,11 @@ namespace Kosound
       /*! Constructor */
       CafStream();
       /*! Destructor */
-      ~CafStream();
+      virtual ~CafStream();
    
    protected:
       /*! Implementation of the open on the specific sound file */
-      bool _open(Kobold::String fName, ALenum* f, ALuint* sr);
+      bool _open(const Kobold::String& fName, ALenum* f, ALuint* sr);
    
       /*! Release all specific implementation allocs */
       void _release();

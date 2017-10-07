@@ -56,7 +56,7 @@ CafStream::~CafStream()
 /*************************************************************************
  *                                 open                                  *
  *************************************************************************/
-bool CafStream::_open(Kobold::String fName, ALenum* f, ALuint* sr)
+bool CafStream::_open(const Kobold::String& fName, ALenum* f, ALuint* sr)
 {
    AudioStreamBasicDescription inputFormat;
    SInt64 fileFrames = 0;

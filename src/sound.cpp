@@ -28,7 +28,7 @@
    #include <math.h>
 
    #define PID180 M_PI / 180.0 /**< PI / 180 definition */
-   inline double deg2Rad(double x){return(PID180 * x);}
+   inline double deg2Rad(double x){ return PID180 * x; }
 #endif
 
 using namespace Kosound;
@@ -72,7 +72,7 @@ bool Sound::initOpenAL()
          enabled = true;
          /* set attenuation model */
          alDistanceModel(AL_EXPONENT_DISTANCE);
-         return(true);
+         return true;
       }
       else
       {
@@ -86,7 +86,7 @@ bool Sound::initOpenAL()
    }
    enabled = false;
    timer.reset();
-   return(false);
+   return false;
 }
 
 /*************************************************************************
@@ -173,11 +173,11 @@ void Sound::setListenerPosition(ALfloat centerX, ALfloat centerY,
 /*************************************************************************
  *                              loadMusic                                *
  *************************************************************************/
-bool Sound::loadMusic(Kobold::String fileName)
+bool Sound::loadMusic(const Kobold::String& fileName)
 {
    if(!enabled)
    {
-      return(false);
+      return false;
    }
       
    if(backMusic)
@@ -194,7 +194,7 @@ bool Sound::loadMusic(Kobold::String fileName)
    backMusic->setLoop(SOUND_AUTO_LOOP);
    backMusic->defineAsMusic();
    
-   return(true);
+   return true;
 }
 
 /*************************************************************************
@@ -249,7 +249,7 @@ void Sound::flush()
  *                            addSoundEffect                             *
  *************************************************************************/
 SndFx* Sound::addSoundEffect(ALfloat x, ALfloat y, ALfloat z, int loop,
-                             Kobold::String fileName)
+      const Kobold::String& fileName)
 {
    SndFx* snd = NULL;
 
@@ -263,13 +263,13 @@ SndFx* Sound::addSoundEffect(ALfloat x, ALfloat y, ALfloat z, int loop,
       sndList.insert(snd);
    }
 
-   return(snd);
+   return snd;
 }
 
 /*************************************************************************
  *                            addSoundEffect                             *
  *************************************************************************/
-SndFx* Sound::addSoundEffect(int loop, Kobold::String fileName)
+SndFx* Sound::addSoundEffect(int loop, const Kobold::String& fileName)
 {
    SndFx* snd = NULL;
 
@@ -283,7 +283,7 @@ SndFx* Sound::addSoundEffect(int loop, Kobold::String fileName)
       sndList.insert(snd);
    }
 
-   return(snd);
+   return snd;
 }
 
 

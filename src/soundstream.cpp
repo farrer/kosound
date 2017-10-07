@@ -26,7 +26,7 @@ using namespace Kosound;
 /***********************************************************************
  *                           Constructor                               *
  ***********************************************************************/
-SoundStream::SoundStream(int t, unsigned long bufSize)
+SoundStream::SoundStream(const SoundStreamType& t, unsigned long bufSize)
 {
    type = t;
 
@@ -52,12 +52,12 @@ SoundStream::~SoundStream()
 /*************************************************************************
  *                                 open                                  *
  *************************************************************************/
-bool SoundStream::open(Kobold::String fName)
+bool SoundStream::open(const Kobold::String& fName)
 {
    if(opened)
    {
       /* Must avoid double opens */
-      return(false);
+      return false;
    }
    
    fileName = fName;
@@ -73,10 +73,10 @@ bool SoundStream::open(Kobold::String fName)
       alGenSources(1, &source);
       check("::open() -> alGenSouces");
 
-      return(true);
+      return true;
    }
 
-   return(false);
+   return false;
 }
 
 /*************************************************************************
@@ -99,7 +99,7 @@ void SoundStream::defineAsMusic()
  *************************************************************************/
 ALuint SoundStream::getSource()
 {
-   return(source);
+   return source;
 }
 
 /*************************************************************************
@@ -142,7 +142,7 @@ bool SoundStream::playback(bool rw)
    {
       if( (isPlaying()) && (!rw) )
       {
-         return(true);
+         return true;
       }
       
       if( (isPlaying()) && (rw) )
@@ -155,7 +155,7 @@ bool SoundStream::playback(bool rw)
       
       if(!stream(buffers[0], rw))
       {
-         return(false);
+         return false;
       }
       
       if(!stream(buffers[1]))
@@ -167,9 +167,9 @@ bool SoundStream::playback(bool rw)
       alSourceQueueBuffers(source, numBuffers, buffers);
       alSourcePlay(source);
       
-      return(true);
+      return true;
    }
-   return(false);
+   return false;
 }
 
 /*************************************************************************
@@ -182,9 +182,9 @@ bool SoundStream::isPlaying()
    if(opened)
    {
       alGetSourcei(source, AL_SOURCE_STATE, &state);
-      return(state == AL_PLAYING);
+      return state == AL_PLAYING;
    }
-   return(false);
+   return false;
 }
 
 /*************************************************************************
@@ -194,9 +194,9 @@ bool SoundStream::rewind()
 {
    if(opened)
    {
-      return(playback(true));
+      return playback(true);
    }
-   return(false);
+   return false;
 }
 
 /*************************************************************************
@@ -248,10 +248,10 @@ bool SoundStream::update()
          }
       }
       
-      return(active);
+      return active;
       
    }
-   return(false);
+   return false;
 }
 
 /*************************************************************************
@@ -272,7 +272,7 @@ bool SoundStream::stream(ALuint buffer, bool rw)
       /* Rewind the file */
       if(!_rewind())
       {
-         return(false);
+         return false;
       }
    }
    else if(ended)
@@ -283,7 +283,7 @@ bool SoundStream::stream(ALuint buffer, bool rw)
          check("::playBack() alSourceStop");
       }
       /* Must only wait. Done if no more plays */
-      return(!(loopInterval < 0));
+      return loopInterval >= 0;
    }
 
    /* Get the buffer */
@@ -295,7 +295,7 @@ bool SoundStream::stream(ALuint buffer, bool rw)
       {
          Kobold::Log::add(Kobold::String("SoundStream::stream(): ") +
                Kobold::String("Couldn't _getBuffer()."));
-         return(false);
+         return false;
       }
 
       totalBytesReaded += bytesReaded;
@@ -307,7 +307,7 @@ bool SoundStream::stream(ALuint buffer, bool rw)
             /* Auto Rewind file */
             if(!_rewind())
             {
-               return(false);
+               return false;
             }
          }
          else if(loopInterval > 0)
@@ -335,7 +335,7 @@ bool SoundStream::stream(ALuint buffer, bool rw)
       check("::playBack() alSourceStop");
    }
    
-   return(true);
+   return true;
 }
 
 /*************************************************************************
@@ -380,7 +380,7 @@ void SoundStream::empty()
 /*************************************************************************
  *                                 check                                 *
  *************************************************************************/
-void SoundStream::check(Kobold::String where)
+void SoundStream::check(const Kobold::String& where)
 {
     int error = alGetError();
  

@@ -43,7 +43,7 @@ namespace Kosound
 class SoundStream
 {
    public:
-      enum
+      enum SoundStreamType
       {
          TYPE_CAF=0,
          TYPE_OGG
@@ -52,7 +52,7 @@ class SoundStream
       /*! Constructor
        * \param t -> SoundStream type constant
        * \param bufSize -> size of the read buffer */ 
-      SoundStream(int t, unsigned long bufSize);
+      SoundStream(const SoundStreamType& t, unsigned long bufSize);
       /*! Destructor
        * \note -> the destructor will call _release() */
       virtual ~SoundStream();
@@ -60,7 +60,7 @@ class SoundStream
       /*! Open the Stream to use
        * \param fName -> name of sound file to load
        * \return true if successfully loaded, false otherwise */
-      bool open(Kobold::String fName);
+      bool open(const Kobold::String& fName);
 
       /*! Define the stream as Music (no position and no atenuation) */
       void defineAsMusic();
@@ -98,7 +98,7 @@ class SoundStream
       void setLoop(int lp);
 
       /*! Get the stream type */
-      int getType(){return(type);};
+      const SoundStreamType& getType(){ return type; };
 
    protected:
       /*! Stream the file to the OpenAL buffer
@@ -111,7 +111,7 @@ class SoundStream
        * \note: Implementation must set the OpenAL format (f)
        *        to either AL_FORMAT_STEREO16 or AL_FORMAT_MONO16
        * \note: Must set the sampleRate (sr) too. */
-      virtual bool _open(Kobold::String fName, ALenum* f, ALuint* sr)=0;
+      virtual bool _open(const Kobold::String& fName, ALenum* f, ALuint* sr)=0;
 
       /*! Release all specific implementation allocs */
       virtual void _release()=0;
@@ -135,7 +135,7 @@ class SoundStream
       /*! Check OpenAl errors
        * \param where -> string with information about 
        *                 where the check occurs */
-      void check(Kobold::String where); 
+      void check(const Kobold::String& where); 
 
       Kobold::String fileName; /**< Filename of the sound stream */
 
@@ -144,7 +144,7 @@ class SoundStream
 
 
    private:
-      int type;          /**< Sound stream type */
+      SoundStreamType type;  /**< Sound stream type */
 
       bool opened;        /**< If caf was opened or not */
       bool ended;         /**< If play ended or not */
