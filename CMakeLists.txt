@@ -102,5 +102,8 @@ if(${KOSOUND_STATIC})
 else(${KOSOUND_STATIC})
    message("   Shared library")
 endif(${KOSOUND_STATIC})
+if(${KOSOUND_DEBUG})
+   message("   with debug symbols")
+endif(${KOSOUND_DEBUG})
 message("**********************************************\n")
 
