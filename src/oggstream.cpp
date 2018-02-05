@@ -23,6 +23,7 @@
 
 #if KOSOUND_HAS_OGRE == 1
    #include <OGRE/OgreResourceGroupManager.h>
+   #include <OGRE/OgreException.h>
 #endif
 
 using namespace Kosound;
