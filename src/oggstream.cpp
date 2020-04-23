@@ -144,7 +144,7 @@ bool OggStream::_open(const Kobold::String& path, ALenum* f, ALuint* sr)
    {
       stream = Ogre::ResourceGroupManager::getSingleton().openResource(path);
    }
-   catch(Ogre::FileNotFoundException)
+   catch(const Ogre::FileNotFoundException&)
    {
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
          "OggStream: Couldn't open ogg file from resources: '%s'", 
