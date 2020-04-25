@@ -23,7 +23,11 @@
 
 #if KOSOUND_HAS_OGRE == 1
    #include <OGRE/OgreMath.h>
-   #include <OGRE/OgreVector3.h>
+   #if OGRE_VERSION_MAJOR == 1
+      #include <OGRE/Ogre.h>
+   #else
+      #include <OGRE/OgreVector3.h>
+   #endif
 #else
    #include <math.h>
 
