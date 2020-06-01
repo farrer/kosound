@@ -386,7 +386,7 @@ void SoundStream::check(const Kobold::String& where)
  
     if(error != AL_NO_ERROR)
     {
-        Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+        Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
               "SoundStream: OpenAL error was raised!");
         switch(error)
         {

@@ -146,7 +146,7 @@ bool OggStream::_open(const Kobold::String& path, ALenum* f, ALuint* sr)
    }
    catch(const Ogre::FileNotFoundException&)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
          "OggStream: Couldn't open ogg file from resources: '%s'", 
          path.c_str());
       return false;
@@ -159,7 +159,7 @@ bool OggStream::_open(const Kobold::String& path, ALenum* f, ALuint* sr)
    if(!(oggFile = fopen(path.c_str(), "rb")))
    {
       //cerr << "Could not open Ogg file: " <<  dir.getRealFile(path) << endl;
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
 	  "Could not open Ogg file: %s", path.c_str());
       return false;
    }
