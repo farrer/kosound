@@ -73,8 +73,11 @@ class Sound
       static void flush();
 
       /*! Load and Start to Play OGG music file.
-       * \param fileName -> name of the ogg file with the desired music. */
-      static bool loadMusic(const Kobold::String& fileName);
+       * \param fileName -> name of the ogg file with the desired music.
+       * \param fileReader -> FileReader to use. Pointer should not be freed 
+       * and will be deleted here when no longer needed. */
+      static bool loadMusic(const Kobold::String& fileName, 
+            Kobold::FileReader* fileReader);
    
       /*! Add Sound effect to the list
        *  \param x -> X position
@@ -82,16 +85,21 @@ class Sound
        *  \param z -> Z position
        *  \param loop -> Sound loop interval ( < 0 won't loop) 
        *  \param fileName -> name of the ogg file to open
+       *  \param fileReader -> FileReader to use. Pointer should not be freed 
+       *   and will be deleted here when no longer needed. 
        *  \return pointer to the added Sound */
       static SndFx* addSoundEffect(ALfloat x, ALfloat y, ALfloat z, int loop,
-            const Kobold::String& fileName);
+            const Kobold::String& fileName, Kobold::FileReader* fileReader);
       
       /*! Add Sound effect without position to the list
        *  \param loop -> if Sound will loop at end or not (see sndFx and
        *                                                   ogg_stream)
        *  \param fileName -> name of the ogg file to open
+       *  \param fileReader -> FileReader to use. Pointer should not be freed 
+       *   and will be deleted here when no longer needed. 
        *  \return pointer to the added Sound */
-      static SndFx* addSoundEffect(int loop, const Kobold::String& fileName);
+      static SndFx* addSoundEffect(int loop, const Kobold::String& fileName,
+            Kobold::FileReader* fileReader);
 
       /*! Remove Sound effect from list
        *  \param snd -> pointer to Sound effect to remove */

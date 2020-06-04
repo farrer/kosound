@@ -23,6 +23,7 @@
 
 #include <kobold/platform.h>
 #include <kobold/kstring.h>
+#include <kobold/filereader.h>
 
 #ifdef __APPLE__
    #include <OpenAL/al.h>
@@ -57,17 +58,20 @@ class SndFx: public Kobold::ListElement
       /*! Constructor of Non positional Source 
        * \param lp -> loop interval (<0 won't loop, =0 loop 
        *              just after the end, >0 wait lp seconds to loop)
-       * \param fileName -> name of the Ogg File to Open */
-      SndFx(int lp, const Kobold::String& fileName);
+       * \param fileName -> name of the Ogg File to Open 
+       * \param fileReader -> FileReader to use. Will be deleted by SndFx. */
+      SndFx(int lp, const Kobold::String& fileName,
+            Kobold::FileReader* fileReader);
       
       /*! Constructor of the Class.
        * \param centerX -> X position of the source
        * \param centerY -> Y position of the source
        * \param centerZ -> Z position of the source
        * \param lp -> loop interval (see setLoop)
-       * \param fileName -> name of the Ogg File to Open */
+       * \param fileName -> name of the Ogg File to Open 
+       * \param fileReader -> FileReader to use. Will be deleted by SndFx. */
       SndFx(ALfloat centerX, ALfloat centerY, ALfloat centerZ, int lp,
-            const Kobold::String& fileName);
+            const Kobold::String& fileName, Kobold::FileReader* fileReader);
       /*! Destructor */
       ~SndFx();
 
@@ -130,7 +134,8 @@ class SndFx: public Kobold::ListElement
 
    private:
       /*! Create specific sound stream (related with file type) */
-      SoundStream* createStream(const Kobold::String& fileName);
+      SoundStream* createStream(const Kobold::String& fileName,
+            Kobold::FileReader* fileReader);
 
       SoundStream* sndStream; /**< Sound stream used */
       bool removable; /**< if is automatically removable or not */

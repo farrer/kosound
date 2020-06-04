@@ -36,11 +36,11 @@ SndFx::SndFx()
  *                             Constructor                               *
  *************************************************************************/
 SndFx::SndFx(ALfloat centerX, ALfloat centerY, ALfloat centerZ, int lp,
-      const Kobold::String& fileName)
+      const Kobold::String& fileName, Kobold::FileReader* fileReader)
 {
    removable = true;
    /* Create the Ogg Stream */ 
-   sndStream = createStream(fileName);
+   sndStream = createStream(fileName, fileReader);
    if(!sndStream)
    {
       return;
@@ -75,11 +75,12 @@ SndFx::SndFx(ALfloat centerX, ALfloat centerY, ALfloat centerZ, int lp,
 /*************************************************************************
  *                             Constructor                               *
  *************************************************************************/
-SndFx::SndFx(int lp, const Kobold::String& fileName)
+SndFx::SndFx(int lp, const Kobold::String& fileName, 
+      Kobold::FileReader* fileReader)
 {
    removable = true;
    /* Create the Ogg Stream */ 
-   sndStream = createStream(fileName);
+   sndStream = createStream(fileName, fileReader);
    if(!sndStream)
    {
       return;
@@ -105,12 +106,13 @@ SndFx::SndFx(int lp, const Kobold::String& fileName)
 /*************************************************************************
  *                             createStream                              *
  *************************************************************************/
-SoundStream* SndFx::createStream(const Kobold::String& fileName)
+SoundStream* SndFx::createStream(const Kobold::String& fileName, 
+      Kobold::FileReader* fileReader)
 {
    if(fileName.find(Kobold::String(".ogg")) !=  Kobold::String::npos )
    {
       /* Create Ogg */
-      return new OggStream();
+      return new OggStream(fileReader);
    }
    else
    {

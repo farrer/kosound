@@ -24,12 +24,7 @@
 #include "kosoundconfig.h"
 #include <kobold/platform.h>
 #include <kobold/kstring.h>
-
-#if KOSOUND_HAS_OGRE == 1
-   #include <OGRE/OgreDataStream.h>
-#else
-   #include <stdio.h>
-#endif
+#include <kobold/filereader.h>
 
 #if KOBOLD_PLATFORM == KOBOLD_PLATFORM_IOS || \
     KOBOLD_PLATFORM == KOBOLD_PLATFORM_MACOS
@@ -59,8 +54,11 @@ namespace Kosound
 class OggStream : public SoundStream
 {
    public:
-      /*! Constructor */
-      OggStream();
+      /*! Constructor 
+       * \param fileReader -> FileReader to use to open the file. Its pointer
+       *                      will be deleted by OggStream when 
+       *                      the read ends. */
+      OggStream(Kobold::FileReader* fileReader);
       /*! Destructor */
       virtual ~OggStream();
       
@@ -90,14 +88,10 @@ class OggStream : public SoundStream
       Kobold::String errorString(int code); 
       
    private:
-     #if KOBOLD_HAS_OGRE == 1
-        Ogre::DataStreamPtr stream;    /**< Data stream related to the file. */ 
-     #else
-        FILE* oggFile;
-     #endif
-        OggVorbis_File oggStr;         /**< stream handle */
-        vorbis_info* vorbisInfo;       /**< some formatting data */
-        vorbis_comment* vorbisComment; /**< user comments */
+      Kobold::FileReader* fileReader;
+      OggVorbis_File oggStr;         /**< stream handle */
+      vorbis_info* vorbisInfo;       /**< some formatting data */
+      vorbis_comment* vorbisComment; /**< user comments */
 };
 
 }

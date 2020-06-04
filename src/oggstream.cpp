@@ -20,109 +20,93 @@
 
 #include "oggstream.h"
 #include <kobold/log.h>
+#include <SDL2/SDL.h>
 
-#if KOSOUND_HAS_OGRE == 1
-   #include <OGRE/OgreResourceGroupManager.h>
-   #include <OGRE/OgreException.h>
-#endif
+#define KOSOUND_OGG_BUFFER_SIZE (4096 * 16) /**< Size of the Ogg Buffer */
 
-using namespace Kosound;
+namespace Kosound
+{
 
-#ifdef __APPLE__
-   #define KOSOUND_OGG_BUFFER_SIZE (4096 * 16) /**< Size of the Ogg Buffer */
-#else
-   #define KOSOUND_OGG_BUFFER_SIZE (4096 * 16) /**< Size of the Ogg Buffer */
-#endif
-
-#if KOBOLD_PLATFORM == KOBOLD_PLATFORM_IOS && KOSOUND_HAS_OGRE == 1
-   #include <OGRE/iOS/macUtils.h>
-#endif
-
-
-#if KOSOUND_HAS_OGRE == 1
 /*************************************************************************
- *                         ogre_stream_read_func                         *
+ *                         kosound_stream_read_func                         *
  *************************************************************************/
-static size_t ogre_stream_read_func(void* ptr, size_t size, size_t nmemb, 
+static size_t kosound_stream_read_func(void* ptr, size_t size, size_t nmemb, 
       void* datasource)
 {
-   Ogre::DataStreamPtr* dataStream = (Ogre::DataStreamPtr*) datasource;
-   if(!(*dataStream)->eof())
+   Kobold::FileReader* fileReader = 
+      static_cast<Kobold::FileReader*>(datasource);
+   if(!fileReader->eof())
    {
-      return (*dataStream)->read(ptr, size * nmemb);
+      return fileReader->read(static_cast<char*>(ptr), size * nmemb);
    }
 
    return 0;
 }
 
 /*************************************************************************
- *                         ogre_stream_seek_func                         *
+ *                         kosound_stream_seek_func                         *
  *************************************************************************/
-static int ogre_stream_seek_func(void* datasource, ogg_int64_t offset, 
+static int kosound_stream_seek_func(void* datasource, ogg_int64_t offset, 
       int whence)
 {
-   Ogre::DataStreamPtr* dataStream = (Ogre::DataStreamPtr*) datasource;
+   Kobold::FileReader* fileReader = 
+      static_cast<Kobold::FileReader*>(datasource);
    
    if(whence == SEEK_SET)
    {
       /* We are seeking from the start position */
-      (*dataStream)->seek(offset);
+      fileReader->seek(offset);
       return 0;
    }
    else if((whence == SEEK_CUR) && (offset == 0))
    {
       /* Should be a rewind. */
-      (*dataStream)->seek(offset);
+      fileReader->seek(offset);
       return 0;
    }
-   /*else
-   {
-      Ogre::LogManager::getSingleton().stream(Ogre::LML_CRITICAL)
-         << "seek: offset: '" << offset << "' whence: '" 
-         << whence << "': SEEK_SET: " << SEEK_SET 
-         << " SEEK_CUR: " << SEEK_CUR << " SEEK_END: " << SEEK_END; 
-   }*/
    
-   //TODO
    return -1;
 }
 
 /*************************************************************************
- *                       ogre_stream_close_func                          *
+ *                       kosound_stream_close_func                          *
  *************************************************************************/
-static int ogre_stream_close_func(void* datasource)
+static int kosound_stream_close_func(void* datasource)
 {
-   Ogre::DataStreamPtr* dataStream = (Ogre::DataStreamPtr*) datasource;
-   (*dataStream)->close();
+   Kobold::FileReader* fileReader = 
+      static_cast<Kobold::FileReader*>(datasource);
+   fileReader->close();
+
    return 0;
 }
 
 /*************************************************************************
- *                         ogre_stream_tell_func                         *
+ *                         kosound_stream_tell_func                         *
  *************************************************************************/
-static long int ogre_stream_tell_func(void* datasource)
+static long int kosound_stream_tell_func(void* datasource)
 {
-   Ogre::DataStreamPtr* dataStream = (Ogre::DataStreamPtr*) datasource;
-   return (*dataStream)->tell();
+   Kobold::FileReader* fileReader = 
+      static_cast<Kobold::FileReader*>(datasource);
+   return fileReader->tell();
 }
 
 /*************************************************************************
- *                         ogre_stream_callbacks                         *
+ *                         kosound_stream_callbacks                         *
  *************************************************************************/
-static ov_callbacks OGRE_STREAM_CALLBACK = {
-   ogre_stream_read_func,
-   ogre_stream_seek_func,
-   ogre_stream_close_func,
-   ogre_stream_tell_func
+static ov_callbacks KOSOUND_STREAM_CALLBACK = {
+   kosound_stream_read_func,
+   kosound_stream_seek_func,
+   kosound_stream_close_func,
+   kosound_stream_tell_func
 };
-#endif
 
 /*************************************************************************
  *                             OggStream                                 *
  *************************************************************************/
-OggStream::OggStream()
+OggStream::OggStream(Kobold::FileReader* fileReader)
           :SoundStream(SoundStream::TYPE_OGG, KOSOUND_OGG_BUFFER_SIZE)
 {
+   this->fileReader = fileReader;
 }
 
 /*************************************************************************
@@ -130,6 +114,10 @@ OggStream::OggStream()
  *************************************************************************/
 OggStream::~OggStream()
 {
+   if(this->fileReader != NULL)
+   {
+      delete fileReader;
+   }
 }
 
 /*************************************************************************
@@ -139,12 +127,7 @@ bool OggStream::_open(const Kobold::String& path, ALenum* f, ALuint* sr)
 {
    int result;
 
-#if KOSOUND_HAS_OGRE == 1
-   try
-   {
-      stream = Ogre::ResourceGroupManager::getSingleton().openResource(path);
-   }
-   catch(const Ogre::FileNotFoundException&)
+   if(!fileReader->open(path))
    {
       Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
          "OggStream: Couldn't open ogg file from resources: '%s'", 
@@ -152,34 +135,12 @@ bool OggStream::_open(const Kobold::String& path, ALenum* f, ALuint* sr)
       return false;
    }
 
-   result = ov_open_callbacks((void*)&stream, &oggStr, NULL, 0, 
-         OGRE_STREAM_CALLBACK);
-#else
-   //if(!(oggFile = fopen(dir.getRealFile(path).c_str(), "rb")))
-   if(!(oggFile = fopen(path.c_str(), "rb")))
-   {
-      //cerr << "Could not open Ogg file: " <<  dir.getRealFile(path) << endl;
-      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
-	  "Could not open Ogg file: %s", path.c_str());
-      return false;
-   }
-
-   #if defined(_MSC_VER)
-      result = ov_open_callbacks(oggFile, &oggStr, 
-            NULL, 0, OV_CALLBACKS_DEFAULT);
-   #else
-      result = ov_open(oggFile, &oggStr, NULL, 0);
-   #endif
-
-#endif
+   result = ov_open_callbacks((void*)fileReader, &oggStr, NULL, 0, 
+         KOSOUND_STREAM_CALLBACK);
 
    if(result < 0)
    {
-#if KOSOUND_HAS_OGRE == 1
-      stream->close();
-#else
-      fclose(oggFile);
-#endif
+      fileReader->close();
       Kobold::Log::add(Kobold::String("OggStream::_open(): ") +
             Kobold::String("Could not open Ogg stream: '") +
             errorString(result));
@@ -246,18 +207,11 @@ bool OggStream::_getBuffer(unsigned long index, unsigned long readBytes,
    /* Try to read from ogg file */
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID
-
-   #if KOSOUND_HAS_OGRE == 1
-      result = ov_read(&oggStr, bufferData+index, readBytes,
-            (OGRE_ENDIAN == OGRE_ENDIAN_BIG),2,1,&section); 
-   #else
-      //FIXME: assuming little-endian.
-      result = ov_read(&oggStr, bufferData+index, readBytes,
-            0, 2, 1,&section); 
-   #endif
+   result = ov_read(&oggStr, bufferData+index, readBytes,
+         SDL_BYTEORDER == SDL_BIG_ENDIAN, 2, 1, &section); 
 #else
-   result = ov_read(&oggStr, (char*)&bufferData[index], readBytes,
-                    &section);
+   result = ov_read(&oggStr, (static_cast<char*>(&bufferData[index]), 
+            readBytes, &section);
 #endif
    if(result < 0)
    {
@@ -298,4 +252,6 @@ Kobold::String OggStream::errorString(int code)
     }
 }
 
+
+}
 

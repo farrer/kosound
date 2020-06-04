@@ -156,7 +156,8 @@ void Sound::setListenerPosition(ALfloat centerX, ALfloat centerY,
 /*************************************************************************
  *                              loadMusic                                *
  *************************************************************************/
-bool Sound::loadMusic(const Kobold::String& fileName)
+bool Sound::loadMusic(const Kobold::String& fileName, 
+      Kobold::FileReader* fileReader)
 {
    if(!enabled)
    {
@@ -171,7 +172,7 @@ bool Sound::loadMusic(const Kobold::String& fileName)
    }
 
    /* Load The File and Set The active Music */
-   backMusic = new SndFx(0, fileName);
+   backMusic = new SndFx(0, fileName, fileReader);
    backMusic->changeVolume(musicVolume);
 
    backMusic->setLoop(SOUND_AUTO_LOOP);
@@ -232,14 +233,14 @@ void Sound::flush()
  *                            addSoundEffect                             *
  *************************************************************************/
 SndFx* Sound::addSoundEffect(ALfloat x, ALfloat y, ALfloat z, int loop,
-      const Kobold::String& fileName)
+      const Kobold::String& fileName, Kobold::FileReader* fileReader)
 {
    SndFx* snd = NULL;
 
    if(enabled)
    {
       /* Create it */
-      snd = new SndFx(x,y,z,loop, fileName);
+      snd = new SndFx(x,y,z,loop, fileName, fileReader);
       snd->changeVolume(sndfxVolume);
 
       /* Insert on the list */
@@ -252,14 +253,15 @@ SndFx* Sound::addSoundEffect(ALfloat x, ALfloat y, ALfloat z, int loop,
 /*************************************************************************
  *                            addSoundEffect                             *
  *************************************************************************/
-SndFx* Sound::addSoundEffect(int loop, const Kobold::String& fileName)
+SndFx* Sound::addSoundEffect(int loop, const Kobold::String& fileName, 
+      Kobold::FileReader* fileReader)
 {
    SndFx* snd = NULL;
 
    if(enabled)
    {
       /* Create it */
-      snd = new SndFx(loop, fileName);
+      snd = new SndFx(loop, fileName, fileReader);
       snd->changeVolume(sndfxVolume);
 
       /* Insert on the list */
