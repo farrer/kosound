@@ -21,19 +21,10 @@
 #include "sound.h"
 #include <kobold/log.h>
 
-#if KOSOUND_HAS_OGRE == 1
-   #include <OGRE/OgreMath.h>
-   #if OGRE_VERSION_MAJOR == 1
-      #include <OGRE/Ogre.h>
-   #else
-      #include <OGRE/OgreVector3.h>
-   #endif
-#else
-   #include <math.h>
+#include <math.h>
 
-   #define PID180 M_PI / 180.0 /**< PI / 180 definition */
-   inline double deg2Rad(double x){ return PID180 * x; }
-#endif
+#define PID180 M_PI / 180.0 /**< PI / 180 definition */
+inline double deg2Rad(double x){ return PID180 * x; }
 
 using namespace Kosound;
 
@@ -139,16 +130,6 @@ void Sound::setListenerPosition(ALfloat centerX, ALfloat centerY,
       	
       alListener3f(AL_POSITION, centerX, centerY, centerZ);
 
-#if KOSOUND_HAS_OGRE == 1
-      Ogre::Radian thetaR = Ogre::Radian(Ogre::Degree(theta));
-      Ogre::Radian phiR = Ogre::Radian(Ogre::Degree(phi));
-      
-      Ogre::Real cosTheta = Ogre::Math::Cos(thetaR);
-      Ogre::Real sinTheta = Ogre::Math::Sin(thetaR);
-      
-      Ogre::Real cosPhi = Ogre::Math::Cos(phiR);
-      Ogre::Real sinPhi = Ogre::Math::Sin(phiR);
-#else
       float thetaR = deg2Rad(theta);
       float phiR = deg2Rad(phi);
 
@@ -157,8 +138,6 @@ void Sound::setListenerPosition(ALfloat centerX, ALfloat centerY,
       
       float cosPhi = cos(phiR);
       float sinPhi = sin(phiR);
-
-#endif
       
       posX = centerX + d * cosTheta * sinPhi;
       posY = centerY + d * sinTheta;
