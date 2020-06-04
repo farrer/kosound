@@ -141,9 +141,9 @@ bool OggStream::_open(const Kobold::String& path, ALenum* f, ALuint* sr)
    if(result < 0)
    {
       fileReader->close();
-      Kobold::Log::add(Kobold::String("OggStream::_open(): ") +
-            Kobold::String("Could not open Ogg stream: '") +
-            errorString(result));
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
+            "OggStream::_open(): failed to open stream '%s': %s",
+            path.c_str(), errorString(result).c_str());
       return false;
    }
 
