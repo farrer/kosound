@@ -41,7 +41,7 @@ SndFx::SndFx(ALfloat centerX, ALfloat centerY, ALfloat centerZ, int lp,
    removable = true;
    /* Create the Ogg Stream */ 
    sndStream = createStream(fileName, fileReader);
-   if(!sndStream)
+   if(sndStream == NULL)
    {
       return;
    }
@@ -69,6 +69,7 @@ SndFx::SndFx(ALfloat centerX, ALfloat centerY, ALfloat centerZ, int lp,
    else
    {
       delete sndStream;
+      sndStream = NULL;
    }
 }
 
@@ -100,6 +101,7 @@ SndFx::SndFx(int lp, const Kobold::String& fileName,
    else
    {
       delete sndStream;
+      sndStream = NULL;
    }
 }
 
@@ -133,7 +135,7 @@ SoundStream* SndFx::createStream(const Kobold::String& fileName,
  *************************************************************************/
 SndFx::~SndFx()
 {
-   if(sndStream)
+   if(sndStream != NULL)
    {
       sndStream->release();
       delete sndStream;
