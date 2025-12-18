@@ -1,5 +1,8 @@
 # Kosound - A simple sound library
 
+## The code here on github is out-of-date.
+## New repository available at: https://codeberg.org/farrer/kosound
+
 ## About
 Kosound is a multiplatform simple collection of usefull code for sound and
 music used by DNTeam applications.
